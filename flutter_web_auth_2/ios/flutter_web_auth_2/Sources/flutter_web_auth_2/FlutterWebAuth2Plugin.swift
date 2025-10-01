@@ -3,6 +3,7 @@ import Flutter
 import SafariServices
 import UIKit
 
+@objc(FlutterWebAuth2Plugin)
 public class SwiftFlutterWebAuth2Plugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter_web_auth_2", binaryMessenger: registrar.messenger())
@@ -77,25 +78,26 @@ public class SwiftFlutterWebAuth2Plugin: NSObject, FlutterPlugin {
 
                         _session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme, completionHandler: {callbackURL, error in 
                         if let callbackURL = callbackURL {
-                            self.completionHandler?(callbackURL.absoluteString)
+                            self.completionHandler?(callbackURL, nil)
                         } else {
-                            self.completionHandler?(nil)
+                            self.completionHandler?(nil, error)
+                        }
                         })
                     } else {
                         _session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme, completionHandler: {callbackURL, error in 
                         if let callbackURL = callbackURL {
-                            self.completionHandler?(callbackURL.absoluteString)
+                            self.completionHandler?(callbackURL, nil)
                         } else {
-                            self.completionHandler?(nil)
+                            self.completionHandler?(nil, error)
                         }
                         })
                     }
                 } else {
                     _session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme, completionHandler: {callbackURL, error in 
                         if let callbackURL = callbackURL {
-                            self.completionHandler?(callbackURL.absoluteString)
+                            self.completionHandler?(callbackURL, nil)
                         } else {
-                            self.completionHandler?(nil)
+                            self.completionHandler?(nil, error)
                         }
                     })
                 }
