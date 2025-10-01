@@ -3,10 +3,10 @@ import Flutter
 import SafariServices
 import UIKit
 
-public class FlutterWebAuth2Plugin: NSObject, FlutterPlugin {
+public class SwiftFlutterWebAuth2Plugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "flutter_web_auth_2", binaryMessenger: registrar.messenger())
-        let instance = FlutterWebAuth2Plugin()
+        let instance = SwiftFlutterWebAuth2Plugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         registrar.addApplicationDelegate(instance)
     }
@@ -75,12 +75,29 @@ public class FlutterWebAuth2Plugin: NSObject, FlutterPlugin {
                             return 
                         }
 
-                        _session = ASWebAuthenticationSession(url: url, callback: ASWebAuthenticationSession.Callback.https(host: host, path: path), completionHandler: completionHandler!)
+                        _session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme, completionHandler: {callbackURL, error in 
+                        if let callbackURL = callbackURL {
+                            self.completionHandler?(callbackURL.absoluteString)
+                        } else {
+                            self.completionHandler?(nil)
+                        })
                     } else {
-                        _session = ASWebAuthenticationSession(url: url, callback: ASWebAuthenticationSession.Callback.customScheme(callbackURLScheme), completionHandler: completionHandler!)
+                        _session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme, completionHandler: {callbackURL, error in 
+                        if let callbackURL = callbackURL {
+                            self.completionHandler?(callbackURL.absoluteString)
+                        } else {
+                            self.completionHandler?(nil)
+                        }
+                        })
                     }
                 } else {
-                    _session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme, completionHandler: completionHandler!)
+                    _session = ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme, completionHandler: {callbackURL, error in 
+                        if let callbackURL = callbackURL {
+                            self.completionHandler?(callbackURL.absoluteString)
+                        } else {
+                            self.completionHandler?(nil)
+                        }
+                    })
                 }
                 let session = _session!
 
